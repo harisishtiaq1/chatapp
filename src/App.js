@@ -1,5 +1,8 @@
 import SideBar from "./Components/SideBar";
 import {ThemeProvider} from "@mui/material"
+import Register from "./Components/Register"
+import Login from "./Components/Login"
+
 import { createTheme } from "@mui/material";
 function App() {
   const theme = createTheme({
@@ -11,7 +14,9 @@ function App() {
   });
   return(
 <ThemeProvider theme={theme}>
-    <SideBar/>
+    {/* <SideBar/> */}
+    <Register/>
+    {/* <Login/> */}
 </ThemeProvider>
     ) 
 }

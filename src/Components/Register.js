@@ -10,8 +10,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { IconButton, Input, Stack } from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
 const theme = createTheme();
 
 export default function SignUp() {
@@ -90,26 +88,6 @@ export default function SignUp() {
                   id="password"
                   autoComplete="new-password"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  type="file"
-                  fullWidth
-                  required
-                  id="image"
-                  name="image"
-                  sx={{ display: "none" }}
-                />
-                <label htmlFor="image">
-                  <Stack direction="row">
-                    <IconButton sx={{ color: "#1565C0" }}>
-                      <ImageIcon />
-                    </IconButton>
-                    <Typography sx={{ mt: 1, color: "#1565C0" }}>
-                      Add an avatar
-                    </Typography>
-                  </Stack>
-                </label>
               </Grid>
             </Grid>
             <Button

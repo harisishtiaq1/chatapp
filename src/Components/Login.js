@@ -12,7 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import GoogleIcon from '@mui/icons-material/Google';
 const theme = createTheme();
 
 export default function SignIn() {
@@ -80,6 +80,16 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
             >
               Sign In
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 1, mb: 2,backgroundColor:'blueviolet',"&:hover":{
+                backgroundColor:"blueviolet"
+              } }}
+              startIcon={<GoogleIcon/>}
+            >
+              Sign In with Google
             </Button>
             <Grid container>
               <Grid item xs>
