@@ -10,16 +10,51 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db, storage } from "../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const [err, SetErr] = React.useState(false);
+  const [displayName, setDisplayName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [image, setImage] = React.useState("");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      console.log("res", res);
+      const storageRef = ref(storage, displayName);
+
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      uploadTask.on(
+        (error) => {
+          SetErr(true);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            await updateProfile(res.user, {
+              displayName,
+              photoURL: downloadURL,
+            });
+            await setDoc(doc(db, "users", res.user.uid), {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL,
+            });
+          });
+        }
+      );
+    } catch (err) {
+      SetErr(true);
+    }
   };
 
   return (
@@ -46,42 +81,53 @@ export default function SignUp() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
+            {err && (
+              <Typography
+                sx={{ fontWeight: "600", color: "red", fontSize: "20px" }}
+              >
+                Something went Wrong
+              </Typography>
+            )}
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
                   required
-                  fullWidth
                   id="firstName"
-                  label="First Name"
+                  label="Name"
                   autoFocus
+                  sx={{
+                    width: 400,
+                  }}
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
+
               <Grid item xs={12}>
                 <TextField
+                  type="email"
                   required
-                  fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  sx={{
+                    width: 400,
+                  }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
-                  fullWidth
+                  sx={{
+                    width: 400,
+                  }}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   name="password"
                   label="Password"
                   type="password"
@@ -89,13 +135,21 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <input
+                  required
+                  sx={{
+                    width: 400,
+                  }}
+                  value={image}
+                  onChange={(e) => setImage(e.target.file)}
+                  name="image"
+                  type="file"
+                  id="image"
+                />
+              </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
