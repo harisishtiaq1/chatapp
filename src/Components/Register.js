@@ -14,17 +14,30 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
+import { Input } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const theme = createTheme();
 
 export default function SignUp() {
+  const naviagte = useNavigate();
   const [err, SetErr] = React.useState(false);
-  const [displayName, setDisplayName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [image, setImage] = React.useState("");
-
+  const [displayName, setDisplayName] = React.useState();
+  const [email, setEmail] = React.useState();
+  const [password, setPassword] = React.useState();
+  const [image, setImage] = React.useState();
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setImage(file);
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log(image, "image");
+    console.log(email, "image");
+    console.log(password, "password");
+    console.log(displayName, "image");
+    console.log("data");
+    console.log("data");
+    console.log("data");
 
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -49,6 +62,7 @@ export default function SignUp() {
               email,
               photoURL: downloadURL,
             });
+            naviagte("/");
           });
         }
       );
@@ -91,12 +105,10 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
+                  // autoComplete="given-name"
+                  type="text"
                   required
-                  id="firstName"
                   label="Name"
-                  autoFocus
                   sx={{
                     width: 400,
                   }}
@@ -136,13 +148,12 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <input
+                <Input
                   required
                   sx={{
                     width: 400,
                   }}
-                  value={image}
-                  onChange={(e) => setImage(e.target.file)}
+                  onChange={handleFileChange}
                   name="image"
                   type="file"
                   id="image"
@@ -154,7 +165,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

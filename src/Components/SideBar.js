@@ -17,7 +17,10 @@ import {
 import person1 from "./assets/A1.jpg";
 import PersonIcon from "@mui/icons-material/Person";
 import SearchIcon from "@mui/icons-material/Search";
+import Main from "./Main";
 import React from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 
 function SideBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -32,7 +35,7 @@ function SideBar() {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const drawerWidth = 300;
+  const drawerWidth = 270;
   return (
     <>
       <AppBar>
@@ -48,7 +51,6 @@ function SideBar() {
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Link
-              href="/"
               sx={{
                 mr: 3,
                 my: 2,
@@ -66,7 +68,6 @@ function SideBar() {
               Home
             </Link>
             <Link
-              href="/details"
               sx={{
                 mr: 3,
                 my: 2,
@@ -81,7 +82,6 @@ function SideBar() {
               Chat{" "}
             </Link>
             <Link
-              href="/orders"
               sx={{
                 mr: 3,
                 my: 2,
@@ -96,7 +96,6 @@ function SideBar() {
               Contacts
             </Link>
             <Link
-              href="/cart"
               sx={{
                 mr: 3,
                 my: 2,
@@ -111,7 +110,6 @@ function SideBar() {
               About Us
             </Link>
             <Link
-              href="/checkout"
               sx={{
                 mr: 3,
                 my: 2,
@@ -168,7 +166,7 @@ function SideBar() {
           sx={{
             width: "250px",
             // height:'50px',
-            padding: 2,
+            padding: 3,
             borderRadius: "16px",
             mt: 2,
             display: "flex",
@@ -330,11 +328,12 @@ function SideBar() {
           <ListItemText sx={{ cursor: "pointer" }}>
             <Typography>User Profile</Typography>
           </ListItemText>
-          <ListItemText sx={{ cursor: "pointer" }}>
+          <ListItemText sx={{ cursor: "pointer" }} onClick={()=>signOut(auth)}>
             <Typography>Sign Out</Typography>
           </ListItemText>
         </List>
       </Popover>
+      <Main/>
     </>
   );
 }

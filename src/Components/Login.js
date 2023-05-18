@@ -12,17 +12,31 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import GoogleIcon from '@mui/icons-material/Google';
+import GoogleIcon from "@mui/icons-material/Google";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const naviagte = useNavigate();
+  const [err, SetErr] = React.useState(false);
+  const [email, setEmail] = React.useState();
+  const [password, setPassword] = React.useState();
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    console.log(email, "image");
+    console.log(password, "password");
+    console.log("data");
+    console.log("data");
+    console.log("data");
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      naviagte("/");
+    } catch (err) {
+      SetErr(true);
+    }
   };
 
   return (
@@ -53,9 +67,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
               label="Email Address"
-              name="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
               autoFocus
             />
@@ -63,10 +78,10 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
-              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -84,10 +99,15 @@ export default function SignIn() {
             <Button
               fullWidth
               variant="contained"
-              sx={{ mt: 1, mb: 2,backgroundColor:'blueviolet',"&:hover":{
-                backgroundColor:"blueviolet"
-              } }}
-              startIcon={<GoogleIcon/>}
+              sx={{
+                mt: 1,
+                mb: 2,
+                backgroundColor: "blueviolet",
+                "&:hover": {
+                  backgroundColor: "blueviolet",
+                },
+              }}
+              startIcon={<GoogleIcon />}
             >
               Sign In with Google
             </Button>
@@ -98,7 +118,7 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
